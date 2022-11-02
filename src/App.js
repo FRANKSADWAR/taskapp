@@ -1,25 +1,90 @@
 import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
-function App() {
+
+
+
+
+function AppFunction(){
+  const [newTask, setNewTask] = useState({});
+  const handleChange = ({target}) => {
+    const {name, value} = target;
+    setNewTask((prevState)=> ({
+        ...prevState,
+        [name]: value,
+        id: Date.now()
+    }));
+  };
+
+  const [ allTasks, setAllTasks ] = useState([]);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if(!newTask.title) return;
+    setAllTasks((prev) => ([newTask,...prev]));
+    setNewTask({});
+  };
+
+  const handleDelete = (taskIdToRemove) =>{
+    setAllTasks((prev)=> prev.filter(
+      (task) => task.id !== taskIdToRemove
+    ));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NewTask
+        newTask={newTask}
+        handleChange = {handleChange}
+        handleSubmit = {handleSubmit}
+      />
+
+      <TaskList
+        allTasks={allTasks}
+        handleDelete={handleDelete}
+      />
     </div>
+  )
+}
+
+function TaskList({allTasks, handleDelete}){
+  return (
+    <ul>
+      {allTasks.map( ({title, description, id})=>(
+        <li key={id}>
+            <div>
+              <h2>{title}</h2>
+              <button onClick={()=>handleDelete(id)}>X</button>
+            </div>
+            {!description ? null : <p>{description}</p>}
+        </li>
+      ) )}
+    </ul>
   );
 }
 
-export default App;
+function NewTask({newTask, handleChange, handleSubmit}){
+  return (
+    <form className="ui form" onSubmit={handleSubmit}>
+      <input
+        name="title"
+        placeholder="New Task"
+        value={newTask.title || ""}
+        onChange={handleChange}
+      />
+      {!newTask.title ? null : (
+        <div>
+          <textarea
+            name="description"
+            placeholder="Details"
+            value={newTask.description || ""}
+            onChange={handleChange}
+          />
+          <button type="submit">Add Task</button>
+        </div>
+      )}
+    </form>
+  );
+}
+
+export default AppFunction;
