@@ -3,7 +3,11 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 
-
+/**
+ * 
+ * @returns the function components as defined by the React Application
+ * Also note that the app usually makes it easy 
+ */
 
 
 function AppFunction(){
