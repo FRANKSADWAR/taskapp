@@ -6,7 +6,7 @@ import './App.css';
 /**
  * 
  * @returns the function components as defined by the React Application
- * Also note that the app usually makes it easy 
+ * Also note that the app usually makes it easy to handle effects and the state of the components
  */
 
 
